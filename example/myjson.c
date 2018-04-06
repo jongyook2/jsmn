@@ -9,7 +9,8 @@
  */
 
 static const char *JSON_STRING =
-	"{\"user\": \"johndoe\", \"admin\": false, \"uid\": 1000,\n  "
+	"{\"User\": \"johndoe\", \"Admin\": false, \"Uid\": 1000,\n  "
+	"\"User\": \"jongyook2\", \"Admin\": true, \"Uid\": 2000,\n  "
 	"\"groups\": [\"users\", \"wheel\", \"audio\", \"video\"]}";
 
 static int jsoneq(const char *json, jsmntok_t *tok, const char *s) {
@@ -41,17 +42,17 @@ int main() {
 
 	/* Loop over all keys of the root object */
 	for (i = 1; i < r; i++) {
-		if (jsoneq(JSON_STRING, &t[i], "user") == 0) {
+		if (jsoneq(JSON_STRING, &t[i], "User") == 0) {
 			/* We may use strndup() to fetch string value */
 			printf("- User: %.*s\n", t[i+1].end-t[i+1].start,
 					JSON_STRING + t[i+1].start);
 			i++;
-		} else if (jsoneq(JSON_STRING, &t[i], "admin") == 0) {
+		} else if (jsoneq(JSON_STRING, &t[i], "Admin") == 0) {
 			/* We may additionally check if the value is either "true" or "false" */
 			printf("- Admin: %.*s\n", t[i+1].end-t[i+1].start,
 					JSON_STRING + t[i+1].start);
 			i++;
-		} else if (jsoneq(JSON_STRING, &t[i], "uid") == 0) {
+		} else if (jsoneq(JSON_STRING, &t[i], "Uid") == 0) {
 			/* We may want to do strtol() here to get numeric value */
 			printf("- UID: %.*s\n", t[i+1].end-t[i+1].start,
 					JSON_STRING + t[i+1].start);
