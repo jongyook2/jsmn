@@ -7,9 +7,9 @@ libjsmn.a: jsmn.o
 	$(AR) rc $@ $^
 
 %.o: %.c jsmn.h
-	$(CC) -c $(CFLAGS) $< -o $@
+	$(CC) -DDEBUG_MODE -c $(CFLAGS) $< -o $@
 
-test: test_default test_strict test_links test_strict_links
+test: test_default test_strict test_links test_strict_links 
 test_default: test/tests.c
 	$(CC) $(CFLAGS) $(LDFLAGS) $< -o test/$@
 	./test/$@
@@ -25,6 +25,8 @@ test_strict_links: test/tests.c
 
 jsmn_test.o: example/myjson.c libjsmn.a
 
+myexample: example/new.o libjsmn.a
+	 $(CC) $(LDFLAGS) $^ -o $@
 simple_example: example/myjson.o libjsmn.a
 	$(CC) $(LDFLAGS) $^ -o $@
 
@@ -36,6 +38,7 @@ clean:
 	rm -f *.a *.so
 	rm -f simple_example
 	rm -f jsondump
+	rm -f new
 
 .PHONY: all clean test
 

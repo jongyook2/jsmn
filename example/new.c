@@ -28,6 +28,11 @@ int main() {
 
 	jsmn_init(&p);
 	r = jsmn_parse(&p, JSON_STRING, strlen(JSON_STRING), t, sizeof(t)/sizeof(t[0]));
+
+	#ifdef DEBUG_MODE
+		printf("Token's count : %d\n", r);
+	#endif
+
 	if (r < 0) {
 		printf("Failed to parse JSON: %d\n", r);
 		return 1;
@@ -43,27 +48,45 @@ int main() {
 	for (i = 1; i < r; i++) {
 		if (jsoneq(JSON_STRING, &t[i], "user") == 0) {
 			/* We may use strndup() to fetch string value */
+			#ifdef DEBUG_MODE
+				printf("%d  %d\n", t[i+1].start, t[i+1].end);
+				printf("[%d]",i+1);
+			#endif
 			printf("- User: %.*s\n", t[i+1].end-t[i+1].start,
 					JSON_STRING + t[i+1].start);
 			i++;
 		} else if (jsoneq(JSON_STRING, &t[i], "admin") == 0) {
 			/* We may additionally check if the value is either "true" or "false" */
+			#ifdef DEBUG_MODE
+				printf("%d  %d\n", t[i+1].start, t[i+1].end);
+				printf("[%d]",i+1);
+			#endif
 			printf("- Admin: %.*s\n", t[i+1].end-t[i+1].start,
 					JSON_STRING + t[i+1].start);
 			i++;
 		} else if (jsoneq(JSON_STRING, &t[i], "uid") == 0) {
 			/* We may want to do strtol() here to get numeric value */
+			#ifdef DEBUG_MODE
+				printf("%d  %d\n", t[i+1].start, t[i+1].end);
+				printf("[%d]",i+1);
+			#endif
 			printf("- UID: %.*s\n", t[i+1].end-t[i+1].start,
 					JSON_STRING + t[i+1].start);
 			i++;
 		} else if (jsoneq(JSON_STRING, &t[i], "groups") == 0) {
 			int j;
+			#ifdef DEBUG_MODE
+				printf("%d  %d\n", t[i+1].start, t[i+1].end);
+			#endif
 			printf("- Groups:\n");
 			if (t[i+1].type != JSMN_ARRAY) {
 				continue; /* We expect groups to be an array of strings */
 			}
 			for (j = 0; j < t[i+1].size; j++) {
 				jsmntok_t *g = &t[i+j+2];
+				#ifdef DEBUG_MODE
+					printf("[%d]",i+j+2);
+				#endif
 				printf("  * %.*s\n", g->end - g->start, JSON_STRING + g->start);
 			}
 			i += t[i+1].size + 1;
