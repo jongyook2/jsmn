@@ -7,10 +7,32 @@
  * A small example of jsmn parsing when JSON structure is known and number of
  * tokens is predictable.
  */
+ char *JSON_STRING;
 
-static const char *JSON_STRING =
-	"{\"user\": \"johndoe\", \"admin\": false, \"uid\": 1000,\n  "
-	"\"groups\": [\"users\", \"wheel\", \"audio\", \"video\"]}";
+ char *readJSONFILE(){
+    FILE *fp;
+    char input[256];
+    int len = 0;
+    fp = fopen("data.json" , "rt");
+
+    JSON_STRING = (char *)malloc(sizeof(char) * 256);
+    while(1){
+       fgets(input , sizeof(input) , fp);
+       if( feof(fp) ) {
+          break ;
+       }
+       len += strlen(input);
+       realloc(JSON_STRING, len + 1);
+       strcat(JSON_STRING, input);
+       //malloc, ralloc
+    }
+
+    printf("%s\n", JSON_STRING);
+
+    fclose(fp);
+    return JSON_STRING;
+ }
+
 
 static int jsoneq(const char *json, jsmntok_t *tok, const char *s) {
 	if (tok->type == JSMN_STRING && (int) strlen(s) == tok->end - tok->start &&
@@ -25,6 +47,7 @@ int main() {
 	int r;
 	jsmn_parser p;
 	jsmntok_t t[128]; /* We expect no more than 128 tokens */
+	JSON_STRING=readJSONFILE();
 
 	jsmn_init(&p);
 	r = jsmn_parse(&p, JSON_STRING, strlen(JSON_STRING), t, sizeof(t)/sizeof(t[0]));
@@ -53,7 +76,7 @@ int main() {
 			i++;
 		} else if (jsoneq(JSON_STRING, &t[i], "uid") == 0) {
 			/* We may want to do strtol() here to get numeric value */
-			printf("- UID: %.*s\n", t[i+1].end-t[i+1].start,
+		printf("- UID: %.*s\n", t[i+1].end-t[i+1].start,
 					JSON_STRING + t[i+1].start);
 			i++;
 		} else if (jsoneq(JSON_STRING, &t[i], "groups") == 0) {
