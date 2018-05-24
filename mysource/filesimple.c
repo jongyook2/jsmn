@@ -71,6 +71,7 @@ void selectNameList(char *jsontr, jsmntok_t *t, int *nameTokIndex){
   printf("%.*s\n",t[nameTokIndex[num-1]+1].end-t[nameTokIndex[num-1]+1].start,jsontr + t[nameTokIndex[num-1]+1].start);
 }
 }
+//checking
 int main() {
 	int i;
 	int r;
