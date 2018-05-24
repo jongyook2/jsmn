@@ -64,9 +64,11 @@ void printNameList(char *jsontr, jsmntok_t *t, int *nameTokIndex){
 }
 void selectNameList(char *jsontr, jsmntok_t *t, int *nameTokIndex){
   int num;
-  while(num!=0){
+  while(1){
   printf("select Name's no (exit:0) >> ");
   scanf("%d",&num);
+  if(num==0){return 0;}
+  if(nameTokIndex[num-1]==0) {printf("not correct name number retry!"); continue;}
   printf("[Name %d] %.*s\n",num,t[nameTokIndex[num-1]].end-t[nameTokIndex[num-1]].start,jsontr + t[nameTokIndex[num-1]].start);
   printf("%.*s\n",t[nameTokIndex[num-1]+1].end-t[nameTokIndex[num-1]+1].start,jsontr + t[nameTokIndex[num-1]+1].start);
 }
