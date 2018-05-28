@@ -74,7 +74,7 @@ void selectNameList(char *jsontr, jsmntok_t *t, int *nameTokIndex){
   }
 }
 void ObjectNameList(char *jsontr, jsmntok_t *t, int *nameTokIndex, int *objectList){
-  printf("***** Name List ******\n");
+  printf("***** Object List ******\n");
   int i=0;
   int j=1;
   int index=0;
@@ -89,9 +89,7 @@ void ObjectNameList(char *jsontr, jsmntok_t *t, int *nameTokIndex, int *objectLi
       j++;
     }
     i++;
-
   }
-
 }
 void printSelectObjectNameList(char *jsontr,jsmntok_t *t, int *objectList){
   int num=0;
