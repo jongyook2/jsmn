@@ -3,6 +3,7 @@
 /**
  * Allocates a fresh unused token from the token pull.
  */
+#define JSMN_PARENT_LINKS
 static jsmntok_t *jsmn_alloc_token(jsmn_parser *parser,
 		jsmntok_t *tokens, size_t num_tokens) {
 	jsmntok_t *tok;
