@@ -106,7 +106,7 @@ void printSelectObjectNameList(char *jsontr,jsmntok_t *t, int *objectList){
         a[j]=i;
         ++j;
       }
-    }
+  }
   }
   printf("%.*s : %.*s\n",t[a[0]].end-t[a[0]].start,jsontr + t[a[0]].start,t[a[0]+1].end-t[a[0]+1].start,jsontr + t[a[0]+1].start);
  i=1;
