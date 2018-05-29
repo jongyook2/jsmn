@@ -29,6 +29,8 @@ myexample: example/new.o libjsmn.a
 	 $(CC) $(LDFLAGS) $^ -o $@
 simple_example: mysource/filesimple.o libjsmn.a
 	$(CC) $(LDFLAGS) $^ -o $@
+ex: mysource/productlist.o libjsmn.a
+	$(CC) $(LDFLAGS) $^ -o $@
 
 jsondump: example/jsondump.o libjsmn.a
 	$(CC) $(LDFLAGS) $^ -o $@
@@ -37,6 +39,7 @@ clean:
 	rm -f *.o example/*.o
 	rm -f *.a *.so
 	rm -f simple_example
+	rm -f ex
 	rm -f jsondump
 	rm -f new
 

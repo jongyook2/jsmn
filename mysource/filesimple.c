@@ -155,6 +155,12 @@ void printSelectObjectNameList(char *jsontr,jsmntok_t *t, int *objectList,int *n
 }
 }
 }
+// void printList(char *jsontr,jsmntok_t *t){
+//   printf("*********************************************\n");
+//   printf("번호\t제품명\t제조사\t가격\t개수\n");
+//   printf("*********************************************\n");
+//   printf("%d");
+// }
 
 
 
