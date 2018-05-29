@@ -13,7 +13,7 @@ char *readJSONFILE(){
   FILE *fp;
   char input[256];
   int len = 0;
-  fp = fopen("data.json" , "rt");
+  fp = fopen("data2.json" , "rt");
 
   char *save = (char *)malloc(sizeof(char) * 256);
   while(1){
@@ -81,11 +81,11 @@ void ObjectNameList(char *jsontr, jsmntok_t *t, int *nameTokIndex, int *objectLi
 
   while(nameTokIndex[i]!=0){
     index=nameTokIndex[i];
-    if(t[index-1].parent==0){
+    if(t[index].parent==0){
       realloc(objectList,sizeof(int)*j);
       objectList[j-1]=index-1;
 
-      printf("[Name %d] %.*s\n",j,t[index+1].end-t[index+1].start,jsontr + t[index+1].start);
+      printf("[Name %d] %.*s\n",j,t[index].end-t[index].start,jsontr + t[index].start);
       j++;
     }
     i++;
