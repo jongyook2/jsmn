@@ -10,12 +10,12 @@
 */
 
 
-char *readJSONFILE(char *file){
+char *readJSONFILE(){
   FILE *fp;
   char input[256];
   int len = 0;
-  strcat(file,".json");
-  fp = fopen(file , "rt");
+  //strcat(file,"data4.json");
+  fp = fopen("data4.json" , "rt");
 
   char *save = (char *)malloc(sizeof(char) * 256);
   while(1){
@@ -43,21 +43,43 @@ static int jsoneq(const char *json, jsmntok_t *tok, const char *s) {
   }
   return -1;
 }
-void jsonNameList(char *jsontr, jsmntok_t *t, int tokcount,NameTokInfo *nameTokInfo){
+void jsonNameList(char *jsontr, jsmntok_t *t, int tokcount,NameTokenInfo *nameTokenInfo){
   //printf("***** Name List ******\n");
-  int i; int j=0;
+  int i; int j=0, k=0;
+  int comp=0;
   for (i = 1; i < tokcount; i++) {
     if(t[i].type==JSMN_STRING){
+      if(t[i].parent==0){ continue; i++;}
       if(t[i].size>0){
-        //if(t[i].parent!){
-          nameTokIndex[j]=i;
+          if(t[i].parent!=comp){
+            comp=t[i].parent;
+            k++;
+          }
+          nameTokenInfo[j].tokindex=i;
+          nameTokenInfo[j].objectindex=k;
+          //printf("check %d",k);
+          comp=t[i].parent;
+          //nameTokenInfo=realloc(nameTokenInfo,sizeof(NameTokenInfo)*(j+1));
           ++j;
+          //printf("%d ",j);
       //   if(t[i].parent==0){
       //
       //   printf("[Name %d] %.*s\n",j,t[i].end-t[i].start,jsontr + t[i].start);
        }
       }
     }
+  }
+  int tokId(char *jsonstr, jsmntok_t *t, NameTokenInfo *nameTokenInfo, const char *name, int oNum){
+    int i=0;
+    while(1){
+      if(nameTokenInfo[i].objectindex==oNum){
+        if(strncmp(jsonstr+t[nameTokenInfo[i].tokindex].start, name, t[nameTokenInfo[i].tokindex].end - t[nameTokenInfo[i].tokindex].start)==0){
+          return nameTokenInfo[i].tokindex;
+        }
+      }
+      i++;
+    }
+
   }
 
 void printNameList(char *jsontr, jsmntok_t *t, int *nameTokIndex,int *nt){
@@ -106,7 +128,7 @@ void ObjectNameList(char *jsontr, jsmntok_t *t, int *nameTokIndex, int *objectLi
     index=nameTokIndex[i];
     if(t[index-1].parent==temp){
 
-      objectList=realloc(objectList,sizeof(int)*j);
+    //  objectList=realloc(objectList,sizeof(int)*j);
       objectList[j-1]=index-1;
 
       printf("[Name %d] %.*s\n",j,t[index+1].end-t[index+1].start,jsontr + t[index+1].start);
@@ -156,11 +178,28 @@ void printSelectObjectNameList(char *jsontr,jsmntok_t *t, int *objectList,int *n
 }
 }
 }
-void printList(char *jsontr,jsmntok_t *t){
+void printList(char *jsontr,jsmntok_t *t, NameTokenInfo *nameTokenInfo){
   printf("*********************************************\n");
   printf("번호\t제품명\t제조사\t가격\t개수\n");
   printf("*********************************************\n");
-  printf("%d");
+int count=1;
+int j=0;
+int temp=nameTokenInfo[0].objectindex;
+int i=1;
+  while(nameTokenInfo[i].objectindex!=NULL){
+    if(nameTokenInfo[i].objectindex!=temp){
+      count++; temp=nameTokenInfo[i].objectindex;
+    }
+    i++;
+  }
+
+  for(j=1;j<=count;j++){
+    printf("%d\t%.*s\t%.*s\t%.*s\t%.*s\n",j,t[tokId(jsontr,t,nameTokenInfo,"name",j)+1].end-t[tokId(jsontr,t,nameTokenInfo,"name",j)+1].start,jsontr + t[tokId(jsontr,t,nameTokenInfo,"name",j)+1].start,
+  t[tokId(jsontr,t,nameTokenInfo,"company",j)+1].end-t[tokId(jsontr,t,nameTokenInfo,"company",j)+1].start,jsontr + t[tokId(jsontr,t,nameTokenInfo,"company",j)+1].start,
+t[tokId(jsontr,t,nameTokenInfo,"price",j)+1].end-t[tokId(jsontr,t,nameTokenInfo,"price",j)+1].start,jsontr + t[tokId(jsontr,t,nameTokenInfo,"price",j)+1].start,
+t[tokId(jsontr,t,nameTokenInfo,"count",j)+1].end-t[tokId(jsontr,t,nameTokenInfo,"count",j)+1].start,jsontr + t[tokId(jsontr,t,nameTokenInfo,"count",j)+1].start
+);
+    }
 }
 
 
@@ -173,26 +212,30 @@ int main() {
   jsmn_parser p;
   char name[20];
   jsmntok_t t[128]; /* We expect no more than 128 tokens */
-  while(1){
-  printf("원하는 파일명 입력: ");
-  scanf("%s",&name);
-  if(name==NULL){printf("%s.json 파일이 존재하지 않습니다",name); break;}
-  char *JSON_STRING=readJSONFILE(name);
-  int nameTokIndex[200]={0};
+
+  // printf("원하는 파일명 입력: ");
+  // scanf("%s",&name);
+  // if(name==NULL){printf("%s.json 파일이 존재하지 않습니다",name); break;}
+  char *JSON_STRING=readJSONFILE();
+  //int nameTokIndex[200]={0};
+  NameTokenInfo *nameTokenInfo = (NameTokenInfo *)malloc(sizeof(NameTokenInfo)*50);
+  //NameTokenInfo nameTokenInfo[100]={0};
   //int *nt=(int*)malloc(sizeof(int));
   int nt[20]={0};
   int **ntD;
-  int *objectList = (int *)malloc(sizeof(int));
+  //int *objectList = (int *)malloc(sizeof(int));
   jsmn_init(&p);
   r = jsmn_parse(&p, JSON_STRING, strlen(JSON_STRING), t, sizeof(t)/sizeof(t[0]));
-  printf("%d\n",t[t[2].parent].parent);
-  printf("%d\n",t[20].parent);
-  jsonNameList(JSON_STRING,t,r,nameTokIndex);
-  printNameList(JSON_STRING,t,nameTokIndex,nt);
+  // printf("%d\n",t[t[2].parent].parent);
+  // printf("%d\n",t[20].parent);
+  jsonNameList(JSON_STRING,t,r,nameTokenInfo);
+  //printNameList(JSON_STRING,t,nameTokIndex,nt);
   //selectNameList(JSON_STRING,t,nameTokIndex);
-  ObjectNameList(JSON_STRING,t,nameTokIndex,objectList);
-  printSelectObjectNameList(JSON_STRING,t,objectList,nameTokIndex,nt);
-}
+  //ObjectNameList(JSON_STRING,t,nameTokIndex,objectList);
+  //printSelectObjectNameList(JSON_STRING,t,objectList,nameTokIndex,nt);
+  //printf("%d",tokId(JSON_STRING,t,nameTokenInfo,"company",1));
+  printList(JSON_STRING,t,nameTokenInfo);
+
   //printf("%d",strlen(nameTokIndex));
 
   // if (r < 0) {
