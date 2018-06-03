@@ -9,13 +9,13 @@
 */
 
 
-char *readJSONFILE(char *file){
+char *readJSONFILE(){
   FILE *fp;
   char input[256];
   int len = 0;
-  strcat(file,".json");
-  fp = fopen(file , "rt");
-  if(fp==NULL){printf("%s 파일이 존재하지 않습니다\n",file); exit(1);}
+  //strcat(file,"data4.json");
+  fp = fopen("data4.json" , "rt");
+
   char *save = (char *)malloc(sizeof(char) * 256);
   while(1){
     fgets(input , sizeof(input) , fp);
