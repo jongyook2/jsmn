@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../jsmn.h"
-
+#include "../productlist.h"
 /*
 * A small example of jsmn parsing when JSON structure is known and number of
 * tokens is predictable.
@@ -42,16 +42,25 @@ static int jsoneq(const char *json, jsmntok_t *tok, const char *s) {
   }
   return -1;
 }
-void jsonNameList(char *jsontr, jsmntok_t *t, int tokcount,int *nameTokIndex){
+void jsonNameList(char *jsontr, jsmntok_t *t, int tokcount,NameTokenInfo *nameTokenInfo){
   //printf("***** Name List ******\n");
-  int i; int j=0;
+  int i; int j=0, k=0;
+  int comp=0;
   for (i = 1; i < tokcount; i++) {
     if(t[i].type==JSMN_STRING){
+      if(t[i].parent==0){ continue; i++;}
       if(t[i].size>0){
-        //if(t[i].parent!){
-          nameTokIndex[j]=i;
-
+          if(t[i].parent!=comp){
+            comp=t[i].parent;
+            k++;
+          }
+          nameTokenInfo[j].tokindex=i;
+          nameTokenInfo[j].objectindex=k;
+          //printf("check %d",k);
+          comp=t[i].parent;
+          //nameTokenInfo=realloc(nameTokenInfo,sizeof(NameTokenInfo)*(j+1));
           ++j;
+          //printf("%d ",j);
       //   if(t[i].parent==0){
       //
       //   printf("[Name %d] %.*s\n",j,t[i].end-t[i].start,jsontr + t[i].start);
@@ -59,6 +68,8 @@ void jsonNameList(char *jsontr, jsmntok_t *t, int tokcount,int *nameTokIndex){
       }
     }
   }
+
+
 
 void printNameList(char *jsontr, jsmntok_t *t, int *nameTokIndex,int *nt){
   int i=0,j=1;
