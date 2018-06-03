@@ -14,7 +14,7 @@ char *readJSONFILE(){
   char input[256];
   int len = 0;
   //strcat(file,".json");
-  fp = fopen("data2.json" , "rt");
+  fp = fopen("data3.json" , "rt");
 
   char *save = (char *)malloc(sizeof(char) * 256);
   while(1){
@@ -153,7 +153,6 @@ void printSelectObjectNameList(char *jsontr,jsmntok_t *t, int *objectList,int *n
     printf("\t[%.*s]\t%.*s\n",t[nt[i+1]].end-t[nt[i+1]].start,jsontr + t[nt[i+1]].start,t[nt[i+1]+1].end-t[nt[i+1]+1].start,jsontr + t[nt[i+1]+1].start);
 
   }
-
   i++;
 }
 //}
