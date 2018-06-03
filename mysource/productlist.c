@@ -83,9 +83,9 @@ void jsonNameList(char *jsontr, jsmntok_t *t, int tokcount, NameTokenInfo *nameT
    }
 
    void printList(char *jsontr,jsmntok_t *t, NameTokenInfo *nameTokenInfo){
-     printf("*********************************************\n");
-     printf("번호\t제품명  \t제조사\t가격\t개수\n");
-     printf("*********************************************\n");
+     printf("*******************************************************\n");
+     printf("번호\t제품명  \t제조사\t가격\t개수\t총가격\n");
+     printf("*******************************************************\n");
    int count=1;
    int j=0;
    int temp=nameTokenInfo[0].objectindex;
@@ -97,12 +97,24 @@ void jsonNameList(char *jsontr, jsmntok_t *t, int tokcount, NameTokenInfo *nameT
        i++;
      }
 
+  int totalPrice[count];
+  for(j=0;j<count;j++){
+  char price[4]={0};
+  char count[2]={0};
+  strncpy(price,jsontr + t[tokId(jsontr,t,nameTokenInfo,"price",j+1)+1].start, t[tokId(jsontr,t,nameTokenInfo,"price",j+1)+1].end-t[tokId(jsontr,t,nameTokenInfo,"price",j+1)+1].start);
+  strncpy(count,jsontr + t[tokId(jsontr,t,nameTokenInfo,"count",j+1)+1].start, t[tokId(jsontr,t,nameTokenInfo,"count",j+1)+1].end-t[tokId(jsontr,t,nameTokenInfo,"count",j+1)+1].start);
+  int priceInt=atoi(price);
+  int countInt=atoi(count);
+  totalPrice[j]=priceInt*countInt;
+}
+
+
      for(j=1;j<=count;j++){
-       printf("%d\t%.*s  \t%.*s\t%.*s\t%.*s\n",j,t[tokId(jsontr,t,nameTokenInfo,"name",j)+1].end-t[tokId(jsontr,t,nameTokenInfo,"name",j)+1].start,jsontr + t[tokId(jsontr,t,nameTokenInfo,"name",j)+1].start,
+       printf("%d\t%.*s  \t%.*s\t%.*s\t%.*s\t%d\n",j,t[tokId(jsontr,t,nameTokenInfo,"name",j)+1].end-t[tokId(jsontr,t,nameTokenInfo,"name",j)+1].start,jsontr + t[tokId(jsontr,t,nameTokenInfo,"name",j)+1].start,
      t[tokId(jsontr,t,nameTokenInfo,"company",j)+1].end-t[tokId(jsontr,t,nameTokenInfo,"company",j)+1].start,jsontr + t[tokId(jsontr,t,nameTokenInfo,"company",j)+1].start,
    t[tokId(jsontr,t,nameTokenInfo,"price",j)+1].end-t[tokId(jsontr,t,nameTokenInfo,"price",j)+1].start,jsontr + t[tokId(jsontr,t,nameTokenInfo,"price",j)+1].start,
-   t[tokId(jsontr,t,nameTokenInfo,"count",j)+1].end-t[tokId(jsontr,t,nameTokenInfo,"count",j)+1].start,jsontr + t[tokId(jsontr,t,nameTokenInfo,"count",j)+1].start
-
+   t[tokId(jsontr,t,nameTokenInfo,"count",j)+1].end-t[tokId(jsontr,t,nameTokenInfo,"count",j)+1].start,jsontr + t[tokId(jsontr,t,nameTokenInfo,"count",j)+1].start,
+   totalPrice[j-1]
    );
        }
    }
