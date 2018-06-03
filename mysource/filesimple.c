@@ -9,13 +9,13 @@
 */
 
 
-char *readJSONFILE(){
+char *readJSONFILE(char *file){
   FILE *fp;
   char input[256];
   int len = 0;
-  //strcat(file,".json");
-  fp = fopen("data3.json" , "rt");
-
+  strcat(file,".json");
+  fp = fopen(file , "rt");
+  if(fp==NULL){printf("%s 파일이 존재하지 않습니다\n",file); exit(1);}
   char *save = (char *)malloc(sizeof(char) * 256);
   while(1){
     fgets(input , sizeof(input) , fp);
@@ -169,13 +169,13 @@ int main() {
   char name[20];
   jsmntok_t t[128]; /* We expect no more than 128 tokens */
   int *objectList = (int *)malloc(sizeof(int));
-  char *JSON_STRING=readJSONFILE();
+
   int nameTokIndex[200]={0};
   int nt[20]={0};
   //while(1){
-  // printf("원하는 파일명 입력: ");
-  // scanf("%s",&name);
-  // if(name==NULL){printf("%s.json 파일이 존재하지 않습니다",name); break;}
+  printf("원하는 파일명 입력: ");
+  scanf("%s",name);
+  char *JSON_STRING=readJSONFILE(name);
 
   jsmn_init(&p);
   r = jsmn_parse(&p, JSON_STRING, strlen(JSON_STRING), t, sizeof(t)/sizeof(t[0]));
