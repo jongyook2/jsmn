@@ -69,7 +69,18 @@ void jsonNameList(char *jsontr, jsmntok_t *t, int tokcount,NameTokenInfo *nameTo
     }
   }
 
+  int tokId(char *jsonstr, jsmntok_t *t, NameTokenInfo *nameTokenInfo, const char *name, int oNum){
+     int i=0;
+     while(1){
+       if(nameTokenInfo[i].objectindex==oNum){
+         if(strncmp(jsonstr+t[nameTokenInfo[i].tokindex].start, name, t[nameTokenInfo[i].tokindex].end - t[nameTokenInfo[i].tokindex].start)==0){
+           return nameTokenInfo[i].tokindex;
+         }
+       }
+       i++;
+     }
 
+   }
 
 void printNameList(char *jsontr, jsmntok_t *t, int *nameTokIndex,int *nt){
   int i=0,j=1;
