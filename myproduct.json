@@ -1,0 +1,30 @@
+[
+    {
+        "company": "disomall",
+        "name": "트윅스",
+        "price": 9090,
+        "rate": 5,
+        "deliveryfee": 2500
+    },
+    {
+        "company": "kakamuka",
+        "name": "핫브레이크",
+        "price": 7600,
+        "rate": 2,
+        "deliveryfee": 2500
+    },
+    {
+        "company": "costco",
+        "name": "스니커즈",
+        "price": 27900,
+        "rate": 5,
+        "deliveryfee": 0
+    },
+    {
+        "company": "nationalwoman",
+        "name": "ABC초콜릿",
+        "price": 26100,
+        "rate": 1,
+        "deliveryfee": 2500
+    }
+]
